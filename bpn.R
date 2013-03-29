@@ -39,8 +39,4 @@ wrapper = function (n) {
 #result = lapply(0:10,wrapper);
 result = wrapper(6);
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 022f04dd5a47062b1db59b19844a0e7deffc60f7
 
