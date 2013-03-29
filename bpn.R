@@ -6,7 +6,6 @@ source("setting.R");
 dat = read.csv(file="data.csv",head=F,sep=",");
 head = names(dat);
 
-
 feature_range = 1:16;
 category_range = 17:21;
 
@@ -22,7 +21,6 @@ test_bpn = function (n){
   
   #apply(dat[order(dat[,2]),]==result$data[order(result$data[,2]),],1,FUN=all);
   
-
   result = compute(net,dat[test,feature_range]);
   
   predict_result = round(result$net.result);
@@ -41,5 +39,8 @@ wrapper = function (n) {
 #result = lapply(0:10,wrapper);
 result = wrapper(6);
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 022f04dd5a47062b1db59b19844a0e7deffc60f7
 
