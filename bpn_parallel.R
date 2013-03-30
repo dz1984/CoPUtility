@@ -1,9 +1,16 @@
-library(neuralnet);
+library(snowfall);
+sfInit(parallel=T,cpus=4);
 
+if (sfParallel()){
+  cat("Running in parallel mode on ",sfCpus(),"node\n");
+}else{
+  cat("Running in sequential mode.\n");
+}
 dat = read.csv(file.choose(),head=F,sep=",");
 head = names(dat);
 
 test_bpn = function (n){
+  sfLibrary(neuralnet);
   category = paste(head[105:107],collapse='+');
   feature = paste(head[1:104],collapse='+');
   formula = as.formula(paste(category,'~',feature));
@@ -28,6 +35,15 @@ wrapper = function (n) {
   score = sum(rep(test_bpn(n),100));
   write(sprintf("[%d]:%f",n,score),"result.tmp",append=T);
   return(score);
-}
-result = lapply(0:10,wrapper);
+};
 
+globalNoExport = "dummy";
+sfExportAll(except=c("globalNoExport"));
+
+sfClusterEvalQ(ls());
+
+cat(unlist(sfLapply(0:10,wrapper)));
+
+sfRemoveAll(except=c("test","wrapper"));
+
+sfStop();
