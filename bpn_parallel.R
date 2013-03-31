@@ -1,18 +1,23 @@
 library(snowfall);
 sfInit(parallel=T,cpus=4);
 
+sfLibrary(neuralnet);
+
 if (sfParallel()){
   cat("Running in parallel mode on ",sfCpus(),"node\n");
 }else{
   cat("Running in sequential mode.\n");
 }
+
 dat = read.csv(file.choose(),head=F,sep=",");
 head = names(dat);
 
+feature_range = 83:104;
+category_range = 105:107;
+
 test_bpn = function (n){
-  sfLibrary(neuralnet);
-  category = paste(head[105:107],collapse='+');
-  feature = paste(head[1:104],collapse='+');
+  category = paste(head[category_range],collapse='+');
+  feature = paste(head[feature_range],collapse='+');
   formula = as.formula(paste(category,'~',feature));
   training = sample(1:nrow(dat),nrow(dat)*0.7);
   test = which(1:nrow(dat)%in%training == F);
@@ -22,11 +27,11 @@ test_bpn = function (n){
   
   #apply(dat[order(dat[,2]),]==result$data[order(result$data[,2]),],1,FUN=all);
   
-  result = compute(net,dat[test,1:104]);
+  result = compute(net,dat[test,feature_range]);
   
   predict_result = round(result$net.result);
   
-  fail_predict = names(which(apply(predict_result==dat[test,105:107],1,FUN=all)==F));
+  fail_predict = names(which(apply(predict_result==dat[test,category_range],1,FUN=all)==F));
   
   return (1-(length(fail_predict)/length(test)));
 };
