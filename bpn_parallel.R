@@ -45,8 +45,6 @@ wrapper = function (n) {
 globalNoExport = "dummy";
 sfExportAll(except=c("globalNoExport"));
 
-sfClusterEvalQ(ls());
-
 cat(unlist(sfLapply(0:10,wrapper)));
 
 sfRemoveAll(except=c("test","wrapper"));
